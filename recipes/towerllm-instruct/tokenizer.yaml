@@ -1,0 +1,6 @@
+# Replace by local path to Llama-2-7b tokenizer
+tokenizer_name_or_path: meta-llama/Llama-2-7b
+template: Mistral-7B-Instruct-v0.1
+save_pretrained: data/towerllm-instruct-tokenizer
+push_to_hub: True
+hf_repo_id: Unbabel/towerllm-instruct-tokenizer

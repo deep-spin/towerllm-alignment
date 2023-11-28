@@ -269,3 +269,35 @@ class DPOConfig(transformers.TrainingArguments):
     )
     optim: Optional[str] = field(default="rmsprop")
     remove_unused_columns: bool = field(default=False)
+
+@dataclass
+class PrepareTokenizerArguments:
+    tokenizer_name_or_path: Optional[str] = field(
+        default=None,
+        metadata={"help": ("The tokenizer checkpoint for base initialization.")},
+    )
+
+    template: Optional[str] = field(
+        default=None,
+        metadata={"help": ("The chat template to use.")},
+    )
+
+    save_pretrained: Optional[str] = field(
+        default=None,
+        metadata={"help": ("The path to save the tokenizer to.")},
+    )
+
+    push_to_hub: bool = field(
+        default=False,
+        metadata={"help": ("Whether to push the tokenizer to the Hub.")},
+    )
+
+    hf_repo_id: Optional[str] = field(
+        default=None,
+        metadata={"help": ("The Hub repo ID to push the tokenizer to.")},
+    )
+
+    hf_public: bool = field(
+        default=False,
+        metadata={"help": ("Whether to make the tokenizer public on the Hub.")},
+    )
