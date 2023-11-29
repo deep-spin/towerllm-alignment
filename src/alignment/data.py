@@ -25,7 +25,7 @@ DEFAULT_CHAT_TEMPLATE = "{% for message in messages %}\n{% if message['role'] ==
 
 
 def apply_chat_template(
-    example, tokenizer, task: Literal["sft", "generation", "rm", "dpo"] = "sft", assistant_prefix="<|assistant|>\n"
+    example, tokenizer, task: Literal["sft", "generation", "rm", "dpo"] = "sft", assistant_prefix="<|assistant|>\n", add_empty_system_message=False
 ):
     def _strip_prefix(s, pattern):
         # Use re.escape to escape any special characters in the pattern
@@ -34,7 +34,7 @@ def apply_chat_template(
     if task in ["sft", "generation"]:
         messages = example["messages"]
         # We add an empty system message if there is none
-        if messages[0]["role"] != "system":
+        if messages[0]["role"] != "system" and add_empty_system_message:
             messages.insert(0, {"role": "system", "content": ""})
         example["text"] = tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True if task == "generation" else False
@@ -152,7 +152,7 @@ def mix_datasets(dataset_mixer: dict, splits: Optional[List[str]] = None, shuffl
                         split=split,
                     )
                 )
-            elif "test" in split:
+            elif "validation" in split or "test" in split:
                 raw_val_datasets.append(
                     load_dataset(
                         ds,

@@ -94,7 +94,7 @@ def main():
     #####################
     # Apply chat template
     #####################
-    raw_datasets = raw_datasets.map(apply_chat_template, fn_kwargs={"tokenizer": tokenizer, "task": "sft"})
+    raw_datasets = raw_datasets.map(apply_chat_template, fn_kwargs={"tokenizer": tokenizer, "task": "sft", "add_empty_system_message": data_args.add_empty_system_message})
     train_dataset = raw_datasets["train"]
     eval_dataset = raw_datasets["test"]
 
@@ -133,7 +133,7 @@ def main():
         dataset_text_field="text",
         max_seq_length=training_args.max_seq_length,
         tokenizer=tokenizer,
-        packing=True,
+        packing=training_args.packing,
         peft_config=get_peft_config(model_args),
     )
 

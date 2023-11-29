@@ -125,6 +125,18 @@ class ModelArguments:
         default="main",
         metadata={"help": "The specific model version to use (can be a branch name, tag name or commit id)."},
     )
+    tokenizer_name_or_path: Optional[str] = field(
+        default=None,
+        metadata={
+            "help": (
+                "The tokenizer model to use. If not set will default to the name of the model."
+            )
+        },
+    )
+    tokenizer_revision: str = field(
+        default="main",
+        metadata={"help": "The specific tokenizer version to use (can be a branch name, tag name or commit id)."},
+    )
     model_code_revision: str = field(default=None, metadata={"help": "The branch of the IFT model"})
     torch_dtype: Optional[str] = field(
         default=None,
@@ -180,6 +192,9 @@ class ModelArguments:
     def __post_init__(self):
         if self.load_in_8bit and self.load_in_4bit:
             raise ValueError("You can't use 8 bit and 4 bit precision at the same time")
+        if self.tokenizer_name_or_path is None:
+            self.tokenizer_name_or_path = self.model_name_or_path
+            assert self.tokenizer_revision is None, "You must specify either a tokenizer to also specify a revision"
 
 
 @dataclass
@@ -222,6 +237,10 @@ class DataArguments:
     truncation_side: Optional[str] = field(
         default=None, metadata={"help": "Truncation side to use for the tokenizer."}
     )
+    add_empty_system_message: bool = field(
+        default=False,
+        metadata={"help": ("Whether to add an empty system prompt to the input or not.")},
+    )
 
 
 @dataclass
@@ -239,6 +258,10 @@ class SFTConfig(transformers.TrainingArguments):
         metadata={"help": ("Whether to log and evaluate the first global_step or not.")},
     )
     optim: Optional[str] = field(default="adamw_torch")
+    packing: bool = field(
+        default=False,
+        metadata={"help": ("Whether to pack the texts or not.")},
+    )
 
 
 @dataclass

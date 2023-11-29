@@ -58,8 +58,8 @@ def get_quantization_config(model_args) -> BitsAndBytesConfig | None:
 def get_tokenizer(model_args: ModelArguments, data_args: DataArguments) -> PreTrainedTokenizer:
     """Get the tokenizer for the model."""
     tokenizer = AutoTokenizer.from_pretrained(
-        model_args.model_name_or_path,
-        revision=model_args.model_revision,
+        model_args.tokenizer_name_or_path,
+        revision=model_args.tokenizer_revision,
     )
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token_id = tokenizer.eos_token_id
@@ -75,6 +75,8 @@ def get_tokenizer(model_args: ModelArguments, data_args: DataArguments) -> PreTr
         tokenizer.chat_template = data_args.chat_template
     elif tokenizer.chat_template is None:
         tokenizer.chat_template = DEFAULT_CHAT_TEMPLATE
+
+    tokenizer.padding_side = "right"
 
     return tokenizer
 
