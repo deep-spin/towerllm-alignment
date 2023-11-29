@@ -262,7 +262,10 @@ class SFTConfig(transformers.TrainingArguments):
         default=False,
         metadata={"help": ("Whether to pack the texts or not.")},
     )
-
+    resume_from_checkpoint: bool = field(
+        default=False,
+        metadata={"help": ("Whether to resume from a checkpoint or not. By default, it will find the latest checkpoint in the output directory.")},
+    )
 
 @dataclass
 class DPOConfig(transformers.TrainingArguments):
